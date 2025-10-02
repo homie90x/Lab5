@@ -10,15 +10,12 @@ public class Matching {
 
         public static int[] satisfactoryPair(int[][] progPref, int[][] compPref){
                 int n = progPref.length;
-                
+
                 int[] progMatch = new int[n];
                 Arrays.fill(progMatch, -1);
-                System.out.println("progMatch start " + Arrays.toString(progMatch));
-
 
                 int[] compMatch = new int[n];
                 Arrays.fill(compMatch, -1);
-                System.out.println("compMatch start " + Arrays.toString(compMatch));
                 //Indicates the company/programmer match (initialized as unmatched)
 
                 boolean progFree[] = new boolean[n];
@@ -40,16 +37,11 @@ public class Matching {
                                 }
                                 else {
                                         int comp = progPref[prog][nextApplication[prog]];
-                                        System.out.println("comp check " + comp);
-                                        System.out.println("prog check " + (prog+1) + "\n");
 
                                         //sets the company variable equal to the next preference of the current programmer
                                         nextApplication[prog]++;
                                         //Increase application position for next iteration
                                         
-                                        System.out.println("comp index check " + (comp-1));
-                                        System.out.println("prog index check " + (prog) + "\n");
-
                                         if (compMatch[comp-1] == -1){
                                         //if the company is free
 
@@ -60,16 +52,11 @@ public class Matching {
                                                 progFree[prog] = false;
                                                 //programmer is no longer free
                                                 freeCounter--;
-
-                                                System.out.println("progMatch " + Arrays.toString(progMatch));
-                                                System.out.println("compMatch " + Arrays.toString(compMatch) + "\n");
-
                                                 //now we have one less programmer to pair with a company
                                         }
                                         else {
                                         //goes into the comparison sequence if a company is already occupied
                                                 int oldProg = compMatch[comp];
-                                                System.out.println("oldProg " +oldProg);
                                                 if (compPrefersP1overP2(compPref[comp], prog, oldProg)){
                                                 //if P1 is preferred over P2
                                                         compMatch[comp] = prog;
@@ -107,17 +94,20 @@ public class Matching {
 
         public static void main(String[] args){
                int[][] progPref=  {
-                {1, 2, 3},
-                {2, 3, 1},
-                {3, 2, 1}};
+                {5, 4, 4, 3, 1},
+                {1, 5, 2, 2, 4},
+                {4, 2, 3, 4, 2},
+                {2, 1, 5, 1, 3},
+                {3, 3, 1, 5, 5}};
 
                 int[][] compPref= {
-                {3, 2, 1},
-                {2, 1, 3},
-                {1, 3, 2}};
+                {2, 1, 5, 1, 2},
+                {5, 2, 3, 3, 3},
+                {1, 3, 2, 2, 5},
+                {3, 4, 1, 4, 4},
+                {4, 5, 4, 5, 1}};
 
-                System.out.println("FINAL:");
-                System.out.println(satisfactoryPair(progPref, compPref));
+                System.out.println("ProgMatch: " + Arrays.toString(satisfactoryPair(progPref, compPref)));
         }
 
 }
