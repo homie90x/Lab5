@@ -105,8 +105,19 @@ public class Matching {
                 //closes out the method
         }
 
-        public static void main(){
-                
+        public static void main(String[] args){
+               int[][] progPref=  {
+                {1, 2, 3},
+                {2, 3, 1},
+                {3, 2, 1}};
+
+                int[][] compPref= {
+                {3, 2, 1},
+                {2, 1, 3},
+                {1, 3, 2}};
+
+                System.out.println("FINAL:");
+                System.out.println(satisfactoryPair(progPref, compPref));
         }
 
 }
