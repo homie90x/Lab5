@@ -32,59 +32,65 @@ public class Matching {
                 while (freeCounter > 0) {
                         for (int prog = 0; prog < n; prog++){
                                 if (!progFree[prog]){
-                                        continue;
-                                //if the current programmer is not free, move on to the next iteration        
-                                }
+                                        continue;}
+                                //if the current programmer is not free, move on to the next iteration    
+
+                                while (nextApplication[prog] < n && (progPref[prog][nextApplication[prog]] - 1) < 0) {
+                                        nextApplication[prog]++;} //makes sure that all programmers will have a match if possible
+                                        //goes through all available companies to see if something works
+                                
+                                if (nextApplication[prog] >= n) {
+                                        progFree[prog] = false; //indicates that there's no suitable match for this programmer
+                                        freeCounter--; 
+                                        continue;}
+
+                                int comp = progPref[prog][nextApplication[prog]];
+                                 //sets the company variable equal to the next preference of the current programmer
+
+                                nextApplication[prog]++;
+                                //Increase application position for next iteration
+                                
+                                if (compMatch[comp-1] == -1){
+                                //if the company is free
+
+                                        compMatch[comp-1] = prog;
+                                        progMatch[prog] = comp;
+                                        //Matching the programmer and company to each other in the array
+
+                                        progFree[prog] = false;
+                                        //programmer is no longer free
+                                        freeCounter--;
+                                        //now we have one less programmer to pair with a company
+                                        }
                                 else {
-                                        int comp = progPref[prog][nextApplication[prog]];
-
-                                        //sets the company variable equal to the next preference of the current programmer
-                                        nextApplication[prog]++;
-                                        //Increase application position for next iteration
-                                        
-                                        if (compMatch[comp-1] == -1){
-                                        //if the company is free
-
-                                                compMatch[comp-1] = prog+1;
+                                //goes into the comparison sequence if a company is already occupied
+                                        int oldProg = compMatch[comp-1];
+                                        if (compPrefersP1overP2(compPref[comp-1], prog, oldProg)){
+                                        //if P1 is preferred over P2
+                                                compMatch[comp -1] = prog;
                                                 progMatch[prog] = comp;
-                                                //Matching the programmer and company to each other in the array
+                                                //makes match switch to new programmer
 
                                                 progFree[prog] = false;
-                                                //programmer is no longer free
-                                                freeCounter--;
-                                                //now we have one less programmer to pair with a company
-                                        }
-                                        else {
-                                        //goes into the comparison sequence if a company is already occupied
-                                                int oldProg = compMatch[comp];
-                                                if (compPrefersP1overP2(compPref[comp], prog, oldProg)){
-                                                //if P1 is preferred over P2
-                                                        compMatch[comp] = prog;
-                                                        progMatch[prog] = comp;
-                                                        //makes match switch to new programmer
-
-                                                        progFree[prog] = false;
-                                                        progFree[oldProg] = true;
-                                                        progMatch[oldProg] = -1;
-                                                        //frees old programmer
+                                                progFree[oldProg] = true;
+                                                progMatch[oldProg] = -1;
+                                                //frees old programmer
 
                                                 }
                                         }
                                 }
                         }
-
+                        return progMatch;
                 }
-
-                return progMatch;
-        }
+                
 
         public static boolean compPrefersP1overP2(int[] compPref, int P1, int P2){
                 int n = compPref.length;
                 for (int i = 0; i < n; i++){
-                        if (compPref[i] == P1)
+                        if (compPref[i] == P1+1)
                                 return true;
                         //P1 is preferred over P2
-                        if (compPref[i] == P2)
+                        if (compPref[i] == P2+1)
                                 return false;
                         //P2 is preferred over P1
                 }
@@ -93,21 +99,72 @@ public class Matching {
         }
 
         public static void main(String[] args){
-               int[][] progPref=  {
-                {5, 4, 4, 3, 1},
-                {1, 5, 2, 2, 4},
-                {4, 2, 3, 4, 2},
-                {2, 1, 5, 1, 3},
-                {3, 3, 1, 5, 5}};
 
-                int[][] compPref= {
-                {2, 1, 5, 1, 2},
-                {5, 2, 3, 3, 3},
-                {1, 3, 2, 2, 5},
-                {3, 4, 1, 4, 4},
-                {4, 5, 4, 5, 1}};
+                System.out.println("ProgMatch returns an array with the coordinating company matches to each programmer (elements 1 to 5) \n");
 
-                System.out.println("ProgMatch: " + Arrays.toString(satisfactoryPair(progPref, compPref)));
-        }
+               int[][] progPref1=  {
+                {5, 1, 4, 2, 3},
+                {4, 5, 2, 1, 3},
+                {4, 2, 3, 5, 1},
+                {3, 2, 4, 1, 5},
+                {1, 4, 2, 3, 5}};
 
+                int[][] compPref1= {
+                {2, 5, 1, 3, 4},
+                {1, 2, 3, 4, 5},
+                {5, 3, 2, 1, 4},
+                {1, 3, 2, 4, 5},
+                {2, 3, 5, 4, 1}};
+
+                System.out.println("ProgMatch (Canvas Example): " + Arrays.toString(satisfactoryPair(progPref1, compPref1)) + "\n");
+                
+                int[][] progPref2=  {
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5}};
+
+                int[][] compPref2= { 
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5},
+                {1, 2, 3, 4, 5}};
+
+                System.out.println("EDGECASE: ProgMatch (Programmers and Companies have same preferences): " + Arrays.toString(satisfactoryPair(progPref2, compPref2)) + "\n");
+
+                int[][] progPref3=  {
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1}};
+
+                int[][] compPref3= { 
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1},
+                {5, 4, 3, 2, 1}};
+
+                System.out.println("EDGECASE: ProgMatch (Programmers and Companies have same preferences REVERSED): " + Arrays.toString(satisfactoryPair(progPref3, compPref3)) + "\n");
+
+                int[][] progPref4 = {
+                {1, 0, 3, 0, 5},
+                {0, 2, 0, 4, 5},
+                {1, 2, 3, 0, 0},
+                {0, 0, 3, 4, 5},
+                {1, 2, 0, 4, 0}};
+
+
+                int[][] compPref4 = {
+                {1, 2, 3, 4, 5},
+                {0, 2, 3, 4, 5},
+                {1, 0, 3, 4, 5},
+                {1, 2, 3, 0, 5},
+                {1, 2, 0, 4, 5}};
+
+                System.out.println("EDGECASE: ProgMatch (Some Preferences aren't listed): " + Arrays.toString(satisfactoryPair(progPref4, compPref4)) + "\n");
+        } 
 }

@@ -1,3 +1,4 @@
 Explanation of Correctness:
 
-Determining the Efficiency of the Algorithm:
+
+Determining the Efficiency of the Algorithm: (Should be Big Theta(n^3) because of the compPrefersP1overP2 method)
