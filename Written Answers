@@ -1,4 +1,17 @@
+Written answers:
+
 Explanation of Correctness:
+ 
+This is similar to the Gale-Shapley matching algorithm. It always terminates because each programmer
+'proposes' to each company at most once. Each iteration either reduces the number of free programmers or advances
+an application. Since there are at most n^2 proposals, the algorithm stops. By design, no pair (p1,c2 for example)
+will both prefer each other over their current partners. Thus guaranteeing a stable matching. 
+
+The time complexity of our algorithm is big theta(N²). This is because each programmer can propose to each company at most once, and there are N programmers and N companies, resulting in at most N × N = N^2 proposals. Each proposal and comparison takes constant time since we precompute the company rankings.
+
+ Therefore, the total time required is proportional to N^2.
+
+The space complexity is also big theta(N²) because we need to store the preference lists and the ranking tables for all programmers and companies.
 
 
-Determining the Efficiency of the Algorithm: (Should be Big Theta(n^3) because of the compPrefersP1overP2 method)
+
